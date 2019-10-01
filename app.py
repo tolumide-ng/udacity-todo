@@ -1,9 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jdotdkzm:aft7jIHUKOOUT6wCdtMMWQoH7E0Vn1Sa@salt.db.elephantsql.com:5432/jdotdkzm'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# 'postgres://udacitystudios@localhost:5432/todoapp'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2://jdotdkzm:aft7jIHUKOOUT6wCdtMMWQoH7E0Vn1Sa@salt.db.elephantsql.com:5432/jdotdkzm'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://mac@localhost:5432/todo'
+
+
+# todo=# \conninfo
+# You are connected to database "secret" as user "secret" via socket in "/secret" at port "5432".
 
 db = SQLAlchemy(app)
 
@@ -17,6 +23,21 @@ class Todo(db.Model):
 
 	def __repr__(self):
 		return f'<Todo description={self.description} id={self.id}>'
+
+db.create_all()
+
+@app.route('/todos/create', methods=['POST'])
+def create_todo():
+    # description=request.form.get('description', '')
+    description = request.get_json()['description']
+    todo = Todo(description=description)
+    db.session.add(todo)
+    db.session.commit()
+    # return redirect(url_for('index'))
+    
+    return jsonify({
+		'description': todo.description
+	})
 
 
 
