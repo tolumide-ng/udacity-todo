@@ -1,18 +1,20 @@
 import sys
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 # 'postgres://udacitystudios@localhost:5432/todoapp'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2://jdotdkzm:aft7jIHUKOOUT6wCdtMMWQoH7E0Vn1Sa@salt.db.elephantsql.com:5432/jdotdkzm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://mac@localhost:5432/todo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://mac@localhost:5432/todoapp'
 
 
 # todo=# \conninfo
 # You are connected to database "secret" as user "secret" via socket in "/secret" at port "5432".
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 class Todo(db.Model):
