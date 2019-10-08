@@ -50,7 +50,11 @@
         headers: {
           'Content-Type': 'application/json'
         }
-      })
+      }).then(() => {
+        document.querySelector('#error').className= 'hidden'
+      }).catch(()=> {
+            document.querySelector('#error').className = '';
+        })
     })
   }
     document.getElementById('form').onsubmit = (e) => {
